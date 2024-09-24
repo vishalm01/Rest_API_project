@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receipt</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            margin: 0 auto;
+            max-width: 18em;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .retailbill {
+            border: 0.006em solid black;
+            padding: 1.5em;
+        }
+        h4 {
+            margin-bottom: 0.2rem;
+        }
+        p,span {
+            margin-bottom: 0.3rem;
+            font-size: 0.438rem;
+        }
+
+        .table>:not(caption)>*>* {
+            border-bottom-width: 0;
+        }   
+        .table {
+            width: 100%;
+            table-layout: fixed;
+            border-color: white;
+            margin-bottom: 0.5rem;
+        }
+        th,td {
+            font-size: 0.438rem;
+            line-height: 0rem;
+            word-wrap: keep-all;
+            white-space: nowrap;
+        }
+        thead {
+            border-bottom: 0.063rem dashed black;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .summary {
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container retailbill">
+        <div class="text-center">
+            <img src="./Images/IMG_20240731_110214.jpg" style="width: 8em; height: auto;" alt="vegrider">
+        </div>
+            <h5 class="text-center fw-bold" style="font-variant: small-caps;">Pandian Stores</h5>
+            <p class="text-center">No: 5, Dhanappa mudhaliyar Street, Madurai - 625001
+        </p>
+        <p class="text-center">WhatsApp care: 9442893985</p>
+        <div class="info">
+            <div class="d-flex justify-content-between">
+                <p>Customer: <span id="customerName"></span></p>
+                <p>Mobile No: <span id="mobileNumber"></span></p>
+            </div>
+                <p style="text-align: center;">CASH</p>
+                <p class="text-start">Bill No: 30406</p>
+            <div class="d-flex justify-content-between">
+                <p>Date: <span id="currentDate"></span></p>
+                <p>Time: <span id="currentTime"></span></span>
+            </div>
+        </div>
+        <table class="table" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th scope="col" class="text-start" style="width: 5%; padding-left: 0;">SNo</th>
+                    <th scope="col" class="text-start" style="width: 45%;">Item Name</th>
+                    <th scope="col" class="text-center" style="width: 12%;">MRP</th>
+                    <th scope="col" class="text-center" style="width: 14%;">Qty(Kg)</th>
+                    <th scope="col" class="text-center" style="width: 12%;">Rate</th>
+                    <th scope="col" class="text-center" style="width: 12%;">Total</th>
+                </tr>
+            </thead>
+            <tbody id="receiptItems">
+            </tbody>
+        </table>
+        <div class="total-section">
+            <div class="d-flex justify-content-between align-items-center" style="border-top: 0.0063rem dashed rgb(0, 0, 0);border-bottom: 0.0063rem dashed rgb(0, 0, 0); padding: 0.3rem;"><p style="margin-bottom: 0;">Total Amount:</p><p style="margin-bottom: 0;" id="totalAmount"></p></div>
+            <br>
+            <div class="d-flex justify-content-between"><p>Amt Received: <p id="amountReceived"></p></p>&nbsp;<p>Balance Amt:<p id="balanceAmount"></p></p> </div>
+        </div>
+        <div class="summary text-center">
+            <p>DOOR DELIVERY AVAILABLE HERE</p>
+            <p class="text-center">Contact us @ "pandianstores.com"</p>
+            <p>***** Thank U Visit Again *****</p>
+        </div>
+    </div>
+
+    <script>
+        var customerName = JSON.parse(localStorage.getItem('customerName')) || '';
+        var mobileNumber = JSON.parse(localStorage.getItem('mobileNumber')) || '';
+        var totalAmount = parseFloat(localStorage.getItem('totalAmount')) || 0;
+        var amountReceived = parseFloat(localStorage.getItem('amountReceived')) || 0;
+        var balanceAmount = parseFloat(localStorage.getItem('balanceAmount')) || 0;
+        var billedItems = JSON.parse(localStorage.getItem('billedItems')) || [];
+
+        var receiptItems = document.getElementById('receiptItems');
+        var currentDate = new Date();
+        document.getElementById('currentTime').textContent = currentDate.toLocaleTimeString();
+        document.getElementById('currentDate').textContent = currentDate.toLocaleDateString('en-GB');
+        document.getElementById('customerName').textContent = customerName;
+        document.getElementById('mobileNumber').textContent = mobileNumber;
+
+        billedItems.forEach(function(item) {
+            var row = document.createElement('tr');
+
+            var sno = document.createElement('td');
+            sno.classList.add('text-start');
+            sno.textContent = item.sno;
+            row.appendChild(sno);
+
+            var itemName = document.createElement('td');
+            itemName.textContent = item.itemName;
+            // itemName.style.paddingRight = '1.25rem';
+            row.appendChild(itemName);
+
+            var mrp = document.createElement('td');
+            mrp.classList.add('text-center');
+            mrp.textContent = parseFloat(item.MRP).toFixed(2);
+            // mrp.style.paddingLeft = '1.25rem';
+            row.appendChild(mrp);
+
+            var quantity = document.createElement('td');
+            quantity.classList.add('text-center');
+            quantity.textContent = item.quantity;
+            // quantity.style.paddingLeft = '0.938rem';
+            row.appendChild(quantity);
+
+            var rate = document.createElement('td');
+            rate.classList.add('text-center');
+            rate.textContent = parseFloat(item.Rate).toFixed(2);
+            row.appendChild(rate);
+
+            var total = document.createElement('td');
+            total.classList.add('text-center');
+            total.textContent = (parseFloat(item.Rate) * parseFloat(item.quantity)).toFixed(2);
+            row.appendChild(total);
+
+            receiptItems.appendChild(row);
+        });
+
+        document.getElementById('totalAmount').textContent = '₹' + totalAmount.toFixed(2);
+        document.getElementById('amountReceived').textContent = '₹' + amountReceived.toFixed(2);
+        document.getElementById('balanceAmount').textContent = '₹' + balanceAmount.toFixed(2);
+
+        window.onload = function() {
+            window.print();
+        };
+    </script>
+</body>
+</html>

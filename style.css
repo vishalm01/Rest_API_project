@@ -1,0 +1,36 @@
+body {
+    background: rgb(28, 28, 34);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container-fluid{
+    width: 95vw;
+    background-color: whitesmoke;
+    margin: 25px;
+    padding: 25px;
+    border-radius: 15px;
+    height:auto;
+}
+
+th,td {
+    text-align: center;
+}
+
+.shopname p, .shopname h3 {
+    text-align: center;
+}
+
+.retailbill {
+    font-family: 'Courier New', Courier, monospace;
+    border: 0.001px solid black;
+    width: 500px;
+    height: auto;
+    padding: 1.5em;
+}
+
+.table {
+    width: 100%;
+    margin-bottom: 0;
+}
